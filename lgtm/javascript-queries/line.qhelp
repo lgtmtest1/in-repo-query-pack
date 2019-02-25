@@ -1,0 +1,42 @@
+<!DOCTYPE qhelp PUBLIC
+  "-//Semmle//qhelp//EN"
+  "qhelp.dtd">
+<qhelp>
+
+
+<overview>
+<p>
+  Never use <code>Throwable.getMessage()</code> to report an exception
+unless it is one of the exceptions that are guaranteed to have a good
+message - ie <code>UserError</code>, <code>ResourceError</code> or one
+of short whitelist of exceptions such
+as <code>SSLUnverifiedPeerException</code>. Instead, give a
+handwritten error message helping the user to understand what has
+happened and/or pass wrap the exception in one of
+the <code>com.semmle.util.exception</code> unchecked exceptions.
+</p>
+
+</overview>
+<section title="Rationale">
+<p>
+Many exceptions have extremely useless messages, for example:
+</p><ul>
+<li><code>NullPointerException</code>: <strong>null</strong></li>
+<li><code>ArrayIndexOutOfBoundsException</code>: the invalid index, so usually -1.</li>
+<li><code>OutOfMemoryError</code>: "java heap space" or "GC overhead limit reached".</li>
+</ul>
+<p>In addition, whenever the exception is unexpected the stack trace gives valuable information and
+shouldn't be thrown away. Printing the entire exception helps with debugging.
+</p><p />
+
+</section>
+<section title="How to Address the Results">
+<p>
+Replace the call to <code>getMessage()</code> with a handwritten
+message and/or wrapping the exception in a Semmle unchecked exception.
+The handling of these unchecked exceptions should only output stack
+traces to log files or at higher verbosity levels.
+</p>
+
+</section>
+</qhelp>
